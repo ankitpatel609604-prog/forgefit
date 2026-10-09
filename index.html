@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ForgeFit Gym | Fitness & Training</title>
+    <meta
+      name="description"
+      content="ForgeFit Gym offers premium fitness training, strength coaching, fat-loss programs, personal training, and elite performance support."
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="script.js"></script>
+    <script>
+      // ============================================
+      // USER AUTHENTICATION & PROFILE MANAGEMENT
+      // ============================================
+      
+      document.addEventListener('DOMContentLoaded', function() {
+        initializeUserProfile();
+      });
+
+      function initializeUserProfile() {
+        const userData = JSON.parse(localStorage.getItem('forgefit_user'));
+        
+        if (userData) {
+          // User is logged in
+          showUserProfile(userData);
+        } else {
+          // User is not logged in
+          showLoginButton();
+        }
+      }
+
+      function showUserProfile(userData) {
+        const authSection = document.getElementById('auth-section');
+        const userProfile = document.getElementById('user-profile');
+        const avatarCircle = document.getElementById('avatar-circle');
+        const userName = document.getElementById('user-name');
+        
+        // Get first name
+        const firstName = userData.fullName.split(' ')[0];
+        const firstLetter = firstName.charAt(0).toUpperCase();
+        
+        // Update avatar and name
+        avatarCircle.textContent = firstLetter;
+        userName.textContent = firstName;
+        
+        // Hide login button and show profile
+        authSection.style.display = 'none';
+        userProfile.style.display = 'flex';
+        
+        // Setup logout
+        document.getElementById('logout-link').addEventListener('click', function(e) {
+          e.preventDefault();
+          logout();
+        });
+      }
+
+      function showLoginButton() {
+        const authSection = document.getElementById('auth-section');
+        const userProfile = document.getElementById('user-profile');
+        
+        authSection.style.display = 'flex';
+        userProfile.style.display = 'none';
+      }
+
+      function logout() {
+        // Clear user data
+        localStorage.removeItem('forgefit_user');
+        
+        // Call logout API
+        fetch('/api/auth/logout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        }).then(() => {
+          // Reload page to show login button
+          location.reload();
+        }).catch(() => {
+          // Even if API fails, reload page
+          location.reload();
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container nav">
+        <a href="#" class="brand" aria-label="ForgeFit home">
+          <span class="brand-mark">F</span>
+          <span>ForgeFit</span>
+        </a>
+
+        <nav class="nav-links" id="navLinks">
+          <a href="#about">About</a>
+          <a href="#programs">Programs</a>
+          <a href="#schedule">Schedule</a>
+          <a href="#trainers">Coaches</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#contact">Contact</a>
+        </nav>
+
+        <div class="nav-actions">
+          <a href="#pricing" class="btn btn-secondary">Join Now</a>
+          <!-- Login/Profile Section -->
+          <div id="auth-section">
+            <a href="http://localhost:8080/login.html" class="btn btn-secondary" id="login-btn">Login</a>
+          </div>
+          <!-- User Profile Dropdown (Hidden by default) -->
+          <div class="user-profile" id="user-profile" style="display: none;">
+            <button class="profile-btn" id="profile-dropdown-btn">
+              <div class="avatar-circle" id="avatar-circle">A</div>
+              <span id="user-name"></span>
+            </button>
+            <div class="dropdown-menu" id="dropdown-menu">
+              <a href="#" id="profile-link">My Profile</a>
+              <a href="#" id="logout-link">Logout</a>
+            </div>
+          </div>
+          <button class="menu-btn" id="menuBtn" aria-label="Toggle menu">☰</button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <span class="eyebrow">Train with purpose</span>
+            <h1>Build strength.<span class="highlight">Move better.</span> Live stronger.</h1>
+            <p>
+              ForgeFit is a premium fitness training destination designed for people who want real results,
+              stronger habits, and a lifestyle that supports performance.
+            </p>
+
+            <div class="hero-actions">
+              <a href="#pricing" class="btn btn-primary">Start Your Journey</a>
+              <a href="#programs" class="btn btn-secondary">Explore Programs</a>
+            </div>
+
+            <div class="hero-stats">
+              <div class="stat">
+                <strong>12k+</strong>
+                <span>Members</span>
+              </div>
+              <div class="stat">
+                <strong>96%</strong>
+                <span>Retention</span>
+              </div>
+              <div class="stat">
+                <strong>4.9/5</strong>
+                <span>Member Rating</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-visual">
+            <div class="hero-image-card">
+              <img
+                src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=80"
+                alt="Gym athlete lifting weights"
+              />
+            </div>
+            <div class="floating-badge">
+              <div class="label">Weekly Goal</div>
+              <strong>4.8x</strong>
+              <span>Higher strength output</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="partners">
+          <div class="container partners-row">
+            <span>Nike</span>
+            <span>Adidas</span>
+            <span>Gatorade</span>
+            <span>Under Armour</span>
+            <span>Bodybuilding</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="section-head">
+            <span class="eyebrow">Why ForgeFit</span>
+            <h2 class="section-title">Everything your training needs</h2>
+          </div>
+
+          <div class="features-grid">
+            <article class="feature-card">
+              <div class="feature-icon">🏋️</div>
+              <h3>Strength Coaching</h3>
+              <p>Improve power, size, and athletic performance with targeted resistance training.</p>
+            </article>
+
+            <article class="feature-card">
+              <div class="feature-icon">🔥</div>
+              <h3>Fat Loss Plans</h3>
+              <p>Structured cardio, conditioning, and nutrition guidance to help you burn fat efficiently.</p>
+            </article>
+
+            <article class="feature-card">
+              <div class="feature-icon">💪</div>
+              <h3>Mobility & Recovery</h3>
+              <p>Build resilience and prevent burnout with movement-based recovery systems and mobility work.</p>
+            </article>
+
+            <article class="feature-card">
+              <div class="feature-icon">📈</div>
+              <h3>Progress Tracking</h3>
+              <p>Monitor your performance weekly with measurable training milestones and expert feedback.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="about">
+        <div class="container about-grid">
+          <div class="about-images">
+            <div class="about-main">
+              <img
+                src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=80"
+                alt="Gym workout"
+              />
+            </div>
+            <div class="about-side">
+              <img
+                src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=900&q=80"
+                alt="Coach guiding client"
+              />
+              <img
+                src="https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&w=900&q=80"
+                alt="Fitness training room"
+              />
+            </div>
+          </div>
+
+          <div class="about-copy">
+            <span class="eyebrow">About us</span>
+            <h2 class="section-title">Train smarter, not harder.</h2>
+            <p>
+              At ForgeFit, we blend premium equipment, expert coaching, and individualized attention to help our members
+              build stronger bodies and stronger habits.
+            </p>
+            <p>
+              Whether you want to lose weight, gain muscle, improve mobility, or become more athletic, our programs are
+              built around your goals and lifestyle.
+            </p>
+
+            <ul class="check-list">
+              <li>Personalized fitness plans based on your body and goals</li>
+              <li>Certified coaches across strength, conditioning, and recovery</li>
+              <li>Modern facilities and supportive training environment</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="section programs" id="programs">
+        <div class="container">
+          <div class="section-head">
+            <span class="eyebrow">Programs</span>
+            <h2 class="section-title">Choose your path to results</h2>
+          </div>
+
+          <div class="program-grid">
+            <article class="program-card">
+              <div class="program-icon">🏋️</div>
+              <h3>Strength Lab</h3>
+              <p>Build lean muscle and raw power with progressive rep schemes, periodization, and expert form coaching.</p>
+              <div class="program-meta">
+                <span>4x weekly</span>
+                <strong>12 weeks</strong>
+              </div>
+            </article>
+
+            <article class="program-card">
+              <div class="program-icon">🔥</div>
+              <h3>Fat Burn</h3>
+              <p>Lose body fat through mixed conditioning, strength circuits, and guided nutrition checkpoints.</p>
+              <div class="program-meta">
+                <span>3x weekly</span>
+                <strong>8 weeks</strong>
+              </div>
+            </article>
+
+            <article class="program-card">
+              <div class="program-icon">⚡</div>
+              <h3>Performance Elite</h3>
+              <p>Enhance speed, explosiveness, and sporting ability with elite athletic conditioning and skill work.</p>
+              <div class="program-meta">
+                <span>Personalized</span>
+                <strong>Custom</strong>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="schedule">
+        <div class="container">
+          <div class="section-head">
+            <span class="eyebrow">Weekly schedule</span>
+            <h2 class="section-title">Training classes & sessions</h2>
+          </div>
+
+          <div class="schedule-wrap">
+            <table class="schedule-table">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Monday</th>
+                  <th>Tuesday</th>
+                  <th>Wednesday</th>
+                  <th>Thursday</th>
+                  <th>Friday</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>6:00 AM</td>
+                  <td><span class="tag primary">Strength</span></td>
+                  <td><span class="tag accent">HIIT</span></td>
+                  <td><span class="tag primary">Power Lift</span></td>
+                  <td><span class="tag accent">Conditioning</span></td>
+                  <td><span class="tag primary">Bootcamp</span></td>
+                </tr>
+                <tr>
+                  <td>12:00 PM</td>
+                  <td><span class="tag accent">Core Focus</span></td>
+                  <td><span class="tag primary">Body Sculpt</span></td>
+                  <td><span class="tag accent">Mobility</span></td>
+                  <td><span class="tag primary">Upper Body</span></td>
+                  <td><span class="tag accent">Fat Burn</span></td>
+                </tr>
+                <tr>
+                  <td>6:00 PM</td>
+                  <td><span class="tag primary">Strength</span></td>
+                  <td><span class="tag accent">Cycling</span></td>
+                  <td><span class="tag primary">Athletic</span></td>
+                  <td><span class="tag accent">CrossFit</span></td>
+                  <td><span class="tag primary">Performance</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="trainers">
+        <div class="container">
+          <div class="section-head">
+            <span class="eyebrow">Our coaches</span>
+            <h2 class="section-title">Meet the team behind your progress</h2>
+          </div>
+
+          <div class="trainers-grid">
+            <article class="trainer">
+              <img
+                src="https://images.unsplash.com/photo-1597345917181-9e7b1d0842e8?auto=format&fit=crop&w=900&q=80"
+                alt="Coach Sarah"
+              />
+              <div class="trainer-body">
+                <div class="trainer-role">Strength Coach</div>
+                <h3>Sarah Patel</h3>
+                <p>Helps members gain strength, confidence, and muscle in a structured, sustainable way.</p>
+              </div>
+            </article>
+
+            <article class="trainer">
+              <img
+                src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=80"
+                alt="Coach Marcus"
+              />
+              <div class="trainer-body">
+                <div class="trainer-role">Conditioning Coach</div>
+                <h3>Marcus Lee</h3>
+                <p>Specializes in endurance, high-energy interval work, and fat-loss transformations.</p>
+              </div>
+            </article>
+
+            <article class="trainer">
+              <img
+                src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=900&q=80"
+                alt="Coach Emily"
+              />
+              <div class="trainer-body">
+                <div class="trainer-role">Mobility Expert</div>
+                <h3>Emily Ross</h3>
+                <p>Focuses on movement quality, recovery, posture, and long-term joint health.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="pricing">
+        <div class="container">
+          <div class="section-head">
+            <span class="eyebrow">Membership</span>
+            <h2 class="section-title">Simple pricing, serious results</h2>
+          </div>
+
+          <div class="pricing-grid">
+            <article class="price-card">
+              <div class="price-label">Starter</div>
+              <div class="price">$29 <span>/month</span></div>
+              <ul>
+                <li>Gym floor access</li>
+                <li>2 classes monthly</li>
+                <li>Basic fitness assessment</li>
+              </ul>
+              <a href="#contact" class="btn btn-secondary">Get Started</a>
+            </article>
+
+            <article class="price-card featured">
+              <div class="price-label">Pro</div>
+              <div class="price">$59 <span>/month</span></div>
+              <ul>
+                <li>Unlimited gym access</li>
+                <li>All group classes</li>
+                <li>Monthly nutrition coaching</li>
+              </ul>
+              <a href="#contact" class="btn btn-primary">Most Popular</a>
+            </article>
+
+            <article class="price-card">
+              <div class="price-label">Elite</div>
+              <div class="price">$99 <span>/month</span></div>
+              <ul>
+                <li>1:1 coaching</li>
+                <li>Custom plan design</li>
+                <li>Priority scheduling</li>
+              </ul>
+              <a href="#contact" class="btn btn-secondary">Book a Call</a>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="section-head">
+            <span class="eyebrow">Testimonials</span>
+            <h2 class="section-title">Real results from real members</h2>
+          </div>
+
+          <div class="testimonials-grid">
+            <article class="testimonial">
+              <div class="stars">★★★★★</div>
+              <p>“The structure and support here are unmatched. I lost 16kg and gained a level of confidence I never had before.”</p>
+              <div class="person">
+                <div class="avatar">A</div>
+                <div>
+                  <strong>Amy R.</strong>
+                  <span>Member, 6 months</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="testimonial">
+              <div class="stars">★★★★★</div>
+              <p>“I’ve never trained with a team this motivating. My strength has increased dramatically and I feel healthier every week.”</p>
+              <div class="person">
+                <div class="avatar">D</div>
+                <div>
+                  <strong>David T.</strong>
+                  <span>Strength member</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="testimonial">
+              <div class="stars">★★★★★</div>
+              <p>“The coaches genuinely care. The gym feels professional, energetic, and welcoming from day one.”</p>
+              <div class="person">
+                <div class="avatar">J</div>
+                <div>
+                  <strong>Jasmine P.</strong>
+                  <span>Performance client</span>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="section-head">
+            <span class="eyebrow">Gallery</span>
+            <h2 class="section-title">Our training environment</h2>
+          </div>
+
+          <div class="gallery-grid">
+            <div class="gallery-item">
+              <img src="https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=900&q=80" alt="Gym equipment" />
+            </div>
+            <div class="gallery-item">
+              <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=80" alt="Gym training" />
+            </div>
+            <div class="gallery-item">
+              <img src="https://images.unsplash.com/photo-1541534401786-2077eed87a74?auto=format&fit=crop&w=900&q=80" alt="Locker room" />
+            </div>
+            <div class="gallery-item">
+              <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=900&q=80" alt="Personal training" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="contact">
+        <div class="container">
+          <div class="cta-box">
+            <div>
+              <h3>Ready to start your transformation?</h3>
+              <p>Book a free consultation and visit the gym today.</p>
+            </div>
+            <a href="#form" class="btn btn-primary">Book a Free Trial</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container contact-grid">
+          <div class="contact-card">
+            <span class="eyebrow">Contact</span>
+            <h3>Let’s get moving</h3>
+
+            <div class="info-list">
+              <div class="info-item">
+                <strong>Location</strong>
+                245 Performance Avenue, Downtown
+              </div>
+              <div class="info-item">
+                <strong>Call</strong>
+                +1 (555) 240-1188
+              </div>
+              <div class="info-item">
+                <strong>Email</strong>
+                hello@forgefitgym.com
+              </div>
+              <div class="info-item">
+                <strong>Hours</strong>
+                Mon-Sat: 6:00 AM - 10:00 PM
+              </div>
+            </div>
+          </div>
+
+          <div class="contact-form" id="form">
+            <form>
+              <div class="form-grid">
+                <label class="field">
+                  <span>Full Name</span>
+                  <input type="text" placeholder="Your name" />
+                </label>
+
+                <label class="field">
+                  <span>Email</span>
+                  <input type="email" placeholder="you@example.com" />
+                </label>
+
+                <label class="field">
+                  <span>Phone</span>
+                  <input type="tel" placeholder="+1 (555) 000-0000" />
+                </label>
+
+                <label class="field">
+                  <span>Goal</span>
+                  <select>
+                    <option>Strength Gain</option>
+                    <option>Weight Loss</option>
+                    <option>Performance Training</option>
+                    <option>General Fitness</option>
+                  </select>
+                </label>
+
+                <label class="field full">
+                  <span>Message</span>
+                  <textarea placeholder="Tell us a little about your fitness goals"></textarea>
+                </label>
+              </div>
+
+              <button type="submit" class="btn btn-primary">Send Enquiry</button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container footer-inner">
+        <div class="brand">
+          <span class="brand-mark">F</span>
+          <span>ForgeFit</span>
+        </div>
+
+        <div class="footer-links">
+          <a href="#about">About</a>
+          <a href="#programs">Programs</a>
+          <a href="#schedule">Schedule</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#contact">Contact</a>
+        </div>
+
+        <div class="footer-meta">© 2026 ForgeFit Gym</div>
+      </div>
+    </footer>
+  </body>
+</html>
