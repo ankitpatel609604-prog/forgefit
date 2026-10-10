@@ -114,18 +114,20 @@
     <script>
         // Display user information
         document.addEventListener('DOMContentLoaded', () => {
-            const userEmail = localStorage.getItem('userEmail') || 'Member';
-            const userRole = localStorage.getItem('userRole') || 'USER';
+            const userDataStr = localStorage.getItem('forgefit_user');
+            const userData = userDataStr ? JSON.parse(userDataStr) : null;
+            
+            const userEmail = userData?.email || 'Member';
+            const userName = userData?.fullName || 'Member';
+            const userRole = userData?.role || 'USER';
 
-            document.getElementById('userEmail').textContent = userEmail;
+            document.getElementById('userEmail').textContent = userName;
             document.getElementById('userRole').textContent = userRole;
 
             // Logout functionality
             document.getElementById('logoutBtn').addEventListener('click', () => {
                 // Clear local storage
-                localStorage.removeItem('userEmail');
-                localStorage.removeItem('userRole');
-                localStorage.removeItem('rememberedEmail');
+                localStorage.removeItem('forgefit_user');
 
                 // Call logout endpoint
                 fetch('/api/auth/logout', { method: 'POST' })

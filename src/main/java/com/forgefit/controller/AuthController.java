@@ -138,6 +138,7 @@ public class AuthController {
                     System.out.println("User logged in successfully: " + email);
                     return ResponseEntity.ok(AuthResponse.builder()
                         .message("Login successful")
+                        .fullName(user.get().getFullName())
                         .email(user.get().getEmail())
                         .role(user.get().getRole())
                         .build());
@@ -156,6 +157,18 @@ public class AuthController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new AuthResponse("An error occurred. Please try again later"));
+        }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<AuthResponse> logout() {
+        try {
+            System.out.println("User logged out successfully");
+            return ResponseEntity.ok(new AuthResponse("Logout successful"));
+        } catch (Exception e) {
+            System.err.println("Error during logout: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new AuthResponse("Logout failed"));
         }
     }
 

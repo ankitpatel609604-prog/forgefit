@@ -17,6 +17,7 @@
       
       document.addEventListener('DOMContentLoaded', function() {
         initializeUserProfile();
+        setupProfileDropdown();
       });
 
       function initializeUserProfile() {
@@ -28,6 +29,25 @@
         } else {
           // User is not logged in
           showLoginButton();
+        }
+      }
+
+      function setupProfileDropdown() {
+        const profileBtn = document.getElementById('profile-dropdown-btn');
+        const dropdownMenu = document.getElementById('dropdown-menu');
+        
+        if (profileBtn && dropdownMenu) {
+          profileBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            dropdownMenu.classList.toggle('show');
+          });
+
+          // Close dropdown when clicking outside
+          document.addEventListener('click', function(e) {
+            if (!e.target.closest('.user-profile')) {
+              dropdownMenu.classList.remove('show');
+            }
+          });
         }
       }
 
